@@ -1,0 +1,4 @@
+*.beam
+/see.boot
+/erl_crash.dump
+/see
