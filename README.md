@@ -20,27 +20,33 @@ Install [hyperfine](https://github.com/sharkdp/hyperfine) first and then:
 
 ```sh
 $ make bench
-hyperfine "erl -eval 'halt()'" "erl -boot ./see -environment '' -load hello" "python3 -c 'exit()'" "ruby -e 'exit'" --warmup 10
-Benchmark 1: erl -eval 'halt()'
-  Time (mean ± σ):     339.6 ms ±  14.5 ms    [User: 253.5 ms, System: 97.8 ms]
-  Range (min … max):   316.3 ms … 366.0 ms    10 runs
+hyperfine "/home/fhunleth/.asdf/installs/erlang/25.2/bin/erl -eval 'halt()'" "/home/fhunleth/.asdf/installs/erlang/25.2/bin/erl -boot ./see -environment '' -load hello" "python3 -c 'exit()'" "/usr/bin/ruby -e 'exit'" --warmup 20
+Benchmark 1: /home/fhunleth/.asdf/installs/erlang/25.2/bin/erl -eval 'halt()'
+  Time (mean ± σ):     265.8 ms ±  16.5 ms    [User: 175.5 ms, System: 83.5 ms]
+  Range (min … max):   245.0 ms … 299.3 ms    11 runs
 
-Benchmark 2: erl -boot ./see -environment '' -load hello
-  Time (mean ± σ):     132.6 ms ±  12.7 ms    [User: 114.4 ms, System: 67.1 ms]
-  Range (min … max):   115.3 ms … 153.6 ms    21 runs
+Benchmark 2: /home/fhunleth/.asdf/installs/erlang/25.2/bin/erl -boot ./see -environment '' -load hello
+  Time (mean ± σ):      52.1 ms ±  10.3 ms    [User: 39.0 ms, System: 38.1 ms]
+  Range (min … max):    43.7 ms …  73.1 ms    65 runs
+
+  Warning: Statistical outliers were detected. Consider re-running this benchmark on a quiet PC without any interferences from other programs. It might help to use the '--warmup' or '--prepare' options.
 
 Benchmark 3: python3 -c 'exit()'
-  Time (mean ± σ):      23.0 ms ±   4.4 ms    [User: 17.9 ms, System: 5.1 ms]
-  Range (min … max):    13.0 ms …  31.2 ms    212 runs
+  Time (mean ± σ):      24.3 ms ±   2.4 ms    [User: 19.7 ms, System: 4.6 ms]
+  Range (min … max):    12.9 ms …  28.2 ms    212 runs
 
-Benchmark 4: ruby -e 'exit'
-  Time (mean ± σ):     147.3 ms ±  14.5 ms    [User: 137.8 ms, System: 33.3 ms]
-  Range (min … max):   108.1 ms … 160.4 ms    18 runs
+  Warning: Statistical outliers were detected. Consider re-running this benchmark on a quiet PC without any interferences from other programs. It might help to use the '--warmup' or '--prepare' options.
+
+Benchmark 4: /usr/bin/ruby -e 'exit'
+  Time (mean ± σ):      48.6 ms ±   7.2 ms    [User: 39.4 ms, System: 9.2 ms]
+  Range (min … max):    45.7 ms …  71.8 ms    63 runs
+
+  Warning: Statistical outliers were detected. Consider re-running this benchmark on a quiet PC without any interferences from other programs. It might help to use the '--warmup' or '--prepare' options.
 
 Summary
   'python3 -c 'exit()'' ran
-    5.76 ± 1.23 times faster than 'erl -boot ./see -environment '' -load hello'
-    6.39 ± 1.38 times faster than 'ruby -e 'exit''
-   14.74 ± 2.89 times faster than 'erl -eval 'halt()''
+    2.00 ± 0.36 times faster than '/usr/bin/ruby -e 'exit''
+    2.14 ± 0.47 times faster than '/home/fhunleth/.asdf/installs/erlang/25.2/bin/erl -boot ./see -environment '' -load hello'
+   10.93 ± 1.29 times faster than '/home/fhunleth/.asdf/installs/erlang/25.2/bin/erl -eval 'halt()''
 ```
 
