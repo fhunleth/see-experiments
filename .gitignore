@@ -1,4 +1,4 @@
-*.beam
-/see.boot
-/erl_crash.dump
-/see
+/erlang/*.beam
+/erlang/see.boot
+/erlang/see
+erl_crash.dump
