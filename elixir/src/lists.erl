@@ -1,11 +1,36 @@
-
+%% ---
+%%  Excerpted from "Programming Erlang, Second Edition",
+%%  published by The Pragmatic Bookshelf.
+%%  Copyrights apply to this code. It may not be used to create training material, 
+%%  courses, books, articles, and the like. Contact us if you are in doubt.
+%%  We make no guarantees that this code is fit for any purpose. 
+%%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
+%%---
+%%
+%% %CopyrightBegin%
+%%
+%% Copyright Ericsson AB 1996-2010. All Rights Reserved.
+%%
+%% The contents of this file are subject to the Erlang Public License,
+%% Version 1.1, (the "License"); you may not use this file except in
+%% compliance with the License. You should have received a copy of the
+%% Erlang Public License along with this software. If not, it can be
+%% retrieved online at http://www.erlang.org/.
+%%
+%% Software distributed under the License is distributed on an "AS IS"
+%% basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
+%% the License for the specific language governing rights and limitations
+%% under the License.
+%%
+%% %CopyrightEnd%
+%%
 -module(lists).
 
 -compile({no_auto_import,[max/2]}).
 -compile({no_auto_import,[min/2]}).
 
 -export([append/2, append/1, subtract/2, reverse/1,
-	 nth/2, nthtail/2, prefix/2, suffix/2, last/1,
+	 nth/2, nthtail/2, prefix/2, suffix/2, last/1, 
 	 seq/2, seq/3, sum/1, duplicate/2, min/1, max/1, sublist/2, sublist/3,
 	 delete/2,
 	 unzip/1, unzip3/1, zip/2, zip3/3, zipwith/3, zipwith3/4,
@@ -13,7 +38,7 @@
 	 usort/1, umerge/1, umerge3/3, umerge/2, rumerge3/3, rumerge/2,
 	 concat/1, flatten/1, flatten/2, flatlength/1,
 	 keydelete/3, keyreplace/4, keytake/3, keystore/4,
-	 keysort/2, keymerge/3, rkeymerge/3, rukeymerge/3,
+	 keysort/2, keymerge/3, rkeymerge/3, rukeymerge/3, 
 	 ukeysort/2, ukeymerge/3, keymap/3]).
 
 %% Bifs: member/2, reverse/2
@@ -123,7 +148,7 @@ last(E, []) -> E.
 -spec seq(integer(), integer()) -> [integer()].
 
 seq(First, Last)
-    when is_integer(First), is_integer(Last), First-1 =< Last ->
+    when is_integer(First), is_integer(Last), First-1 =< Last -> 
     seq_loop(Last-First+1, Last, []).
 
 seq_loop(N, X, L) when N >= 4 ->
@@ -137,8 +162,8 @@ seq_loop(0, _, L) ->
 
 -spec seq(integer(), integer(), integer()) -> [integer()].
 
-seq(First, Last, Inc)
-    when is_integer(First), is_integer(Last), is_integer(Inc) ->
+seq(First, Last, Inc) 
+    when is_integer(First), is_integer(Last), is_integer(Inc) -> 
     if
         Inc > 0, First - Inc =< Last;
         Inc < 0, First - Inc >= Last ->
@@ -186,7 +211,7 @@ min([H|T]) -> min(T, H).
 
 min([H|T], Min) when H < Min -> min(T, H);
 min([_|T], Min)              -> min(T, Min);
-min([],    Min)              -> Min.
+min([],    Min)              -> Min. 
 
 %% max(L) -> returns the maximum element of the list L
 
@@ -224,7 +249,7 @@ sublist_2(List, L) when is_list(List), L > 0 ->
 -spec delete(T, [T]) -> [T].
 
 delete(Item, [Item|Rest]) -> Rest;
-delete(Item, [H|Rest]) ->
+delete(Item, [H|Rest]) -> 
     [H|delete(Item, Rest)];
 delete(_, []) -> [].
 
@@ -290,7 +315,7 @@ zipwith3(F, [], [], []) when is_function(F, 3) -> [].
 
 sort([X, Y | L] = L0) when X =< Y ->
     case L of
-	[] ->
+	[] -> 
 	    L0;
 	[Z] when Y =< Z ->
 	    L0;
@@ -569,7 +594,7 @@ keysort_1(_I, X, _EX, [], R) ->
 -spec keymerge(pos_integer(), [X], [Y]) ->
 	[R] when X :: tuple(), Y :: tuple(), R :: tuple().
 
-keymerge(Index, T1, L2) when is_integer(Index), Index > 0 ->
+keymerge(Index, T1, L2) when is_integer(Index), Index > 0 -> 
     case L2 of
 	[] ->
 	    T1;
@@ -584,7 +609,7 @@ keymerge(Index, T1, L2) when is_integer(Index), Index > 0 ->
 -spec rkeymerge(pos_integer(), [X], [Y]) ->
 	[R] when X :: tuple(), Y :: tuple(), R :: tuple().
 
-rkeymerge(Index, T1, L2) when is_integer(Index), Index > 0 ->
+rkeymerge(Index, T1, L2) when is_integer(Index), Index > 0 -> 
     case L2 of
 	[] ->
 	    T1;
@@ -691,7 +716,7 @@ rukeymerge(Index, T1, L2) when is_integer(Index), Index > 0 ->
 
 keymap(Fun, Index, [Tup|Tail]) ->
    [setelement(Index, Tup, Fun(element(Index, Tup)))|keymap(Fun, Index, Tail)];
-keymap(Fun, Index, []) when is_integer(Index), Index >= 1,
+keymap(Fun, Index, []) when is_integer(Index), Index >= 1, 
                             is_function(Fun, 1) -> [].
 
 %%% Suggestion from OTP-2948: sort and merge with Fun.
@@ -752,7 +777,7 @@ usort_1(Fun, X, [Y | L]) ->
         false  ->
 	    ufsplit_2(Y, L, Fun, [X])
     end.
-
+                    
 -spec umerge(fun((X, Y) -> boolean()), [X], [Y]) -> [(X | Y)].
 
 umerge(Fun, [], T2) when is_function(Fun, 2) ->
@@ -833,7 +858,7 @@ umerge(L) ->
     umergel(L).
 
 %% umerge3(X, Y, Z) -> L
-%%  merges three sorted lists X, Y and Z without duplicates,
+%%  merges three sorted lists X, Y and Z without duplicates, 
 %%  removes duplicates
 
 -spec umerge3([X], [Y], [Z]) -> [(X | Y | Z)].
@@ -897,7 +922,7 @@ rumerge(T1, [H2 | T2]) ->
 %% splitwith(Predicate, List)
 %%  for list programming. Function here is a 'fun'. For backward compatibility,
 %%  {Module,Function} is still accepted.
-%%
+%% 
 %%  The name zf is a joke!
 %%
 %%  N.B. Unless where the functions actually needs it only foreach/2/3,
@@ -914,7 +939,7 @@ all(Pred, [Hd|Tail]) ->
 	true -> all(Pred, Tail);
 	false -> false
     end;
-all(Pred, []) when is_function(Pred, 1) -> true.
+all(Pred, []) when is_function(Pred, 1) -> true. 
 
 -spec any(fun((T) -> boolean()), [T]) -> boolean().
 
@@ -923,7 +948,7 @@ any(Pred, [Hd|Tail]) ->
 	true -> true;
 	false -> any(Pred, Tail)
     end;
-any(Pred, []) when is_function(Pred, 1) -> false.
+any(Pred, []) when is_function(Pred, 1) -> false. 
 
 -spec map(fun((D) -> R), [D]) -> [R].
 
@@ -1063,15 +1088,15 @@ split(_, [], _) ->
 %%% type information.
 %%% =================================================================
 
--compile({inline,
+-compile({inline, 
           [{merge3_12,7}, {merge3_21,7}, {rmerge3_12,7}, {rmerge3_21,7}]}).
 
--compile({inline,
+-compile({inline, 
           [{umerge3_12,8}, {umerge3_21,8},
 	   {rumerge3_12a,7}, {rumerge3_12b,8}]}).
 
--compile({inline,
-          [{keymerge3_12,12}, {keymerge3_21,12},
+-compile({inline, 
+          [{keymerge3_12,12}, {keymerge3_21,12}, 
            {rkeymerge3_12,12}, {rkeymerge3_21,12}]}).
 
 -compile({inline,
@@ -1947,10 +1972,10 @@ ukeymerge3_2(I, E1, T1, H1, [], _HdM, _D, M, _E3, H3, T3) ->
     ukeymerge2_2(I, T1, E1, H1, T3, [H3 | M]).
 
 % E1 =< E2. Inlined.
-ukeymerge3_12(I, E1, T1, H1, E2, H2, T2, E3, H3, T3, M, _HdM, D)
+ukeymerge3_12(I, E1, T1, H1, E2, H2, T2, E3, H3, T3, M, _HdM, D) 
                                                              when E1 =< E3 ->
     ukeymerge3_1(I, T1, D, E1, E2, H2, T2, [H1 | M], E3, H3, T3);
-ukeymerge3_12(I, E1, T1, H1, E2, H2, T2, E3, _H3, T3, M, HdM, _D)
+ukeymerge3_12(I, E1, T1, H1, E2, H2, T2, E3, _H3, T3, M, HdM, _D) 
                                                              when E3 == HdM ->
     ukeymerge3_12_3(I, E1, T1, H1, E2, H2, T2, M, T3);
 ukeymerge3_12(I, E1, T1, H1, E2, H2, T2, _E3, H3, T3, M, _HdM, _D) ->
@@ -1968,10 +1993,10 @@ ukeymerge3_12_3(I, E1, T1, H1, E2, H2, T2, M, []) ->
     ukeymerge2_1(I, T1, E2, E1, T2, [H1 | M], H2).
 
 % E1 > E2. Inlined.
-ukeymerge3_21(I, E1, T1, H1, E2, H2, T2, E3, H3, T3, M, _HdM, D)
+ukeymerge3_21(I, E1, T1, H1, E2, H2, T2, E3, H3, T3, M, _HdM, D) 
                                                              when E2 =< E3 ->
     ukeymerge3_2(I, E1, T1, H1, T2, E2, D, [H2 | M], E3, H3, T3);
-ukeymerge3_21(I, E1, T1, H1, E2, H2, T2, E3, _H3, T3, M, HdM, _D)
+ukeymerge3_21(I, E1, T1, H1, E2, H2, T2, E3, _H3, T3, M, HdM, _D) 
                                                              when E3 == HdM ->
     ukeymerge3_21_3(I, E1, T1, H1, E2, H2, T2, M, T3);
 ukeymerge3_21(I, E1, T1, H1, E2, H2, T2, _E3, H3, T3, M, _HdM, _D) ->
@@ -2010,7 +2035,7 @@ rukeymerge3_12a(I, E1, H1, T1, E2, H2, T2, E3, H3, T3, M) ->
     rukeymerge3_2(I, E1, H1, T1, T2, H2, E2, M, E3, H3, T3).
 
 % E1 > E2. Inlined
-rukeymerge3_21a(I, E1, H1, T1, E2, H2, T2, E3, H3, T3, M, _D1, _D2)
+rukeymerge3_21a(I, E1, H1, T1, E2, H2, T2, E3, H3, T3, M, _D1, _D2) 
                                                               when E1 =< E3 ->
     rukeymerge3_21_3(I, E1, H1, T1, E2, H2, T2, M, E3, H3, T3);
 rukeymerge3_21a(I, _E1, H1, T1, E2, H2, T2, E3, H3, T3, M, D1, D2) ->
@@ -2036,7 +2061,7 @@ rukeymerge3_2(I, _E1, H1, T1, [], H2M, _E2M, M, E3, H3, T3) ->
     rukeymerge2_1(I, T1, E3, T3, [H1, H2M | M], H3).
 
 % E1 =< E2. Inlined.
-rukeymerge3_12b(I, E1, H1, T1, E2, H2, T2, E3, H3, T3, M, H2M)
+rukeymerge3_12b(I, E1, H1, T1, E2, H2, T2, E3, H3, T3, M, H2M) 
                                                              when E2 =< E3 ->
     rukeymerge3_12_3(I, E1, H1, T1, E2, H2, T2, [H2M | M], E3, H3, T3);
 rukeymerge3_12b(I, E1, H1, T1, E2, H2, T2, E3, H3, T3, M, H2M) ->
@@ -2136,7 +2161,7 @@ rukeymerge2_2(_I, T1, _E1, [], M, _E2M, H2M, H1) ->
 %% Ascending.
 fsplit_1(Y, X, Fun, [Z | L], R, Rs) ->
     case Fun(Y, Z) of
-        true ->
+        true -> 
             fsplit_1(Z, Y, Fun, L, [X | R], Rs);
         false ->
             case Fun(X, Z) of
@@ -2174,7 +2199,7 @@ fsplit_1_1(Y, X, Fun, [], R, Rs, S) ->
 %% Descending.
 fsplit_2(Y, X, Fun, [Z | L], R, Rs) ->
     case Fun(Y, Z) of
-        false ->
+        false -> 
             fsplit_2(Z, Y, Fun, L, [X | R], Rs);
         true ->
             case Fun(X, Z) of
@@ -2229,7 +2254,7 @@ rfmergel([L], Acc, Fun, O) ->
 rfmergel([], Acc, Fun, O) ->
     fmergel(Acc, [], Fun, O).
 
-%% merge/3
+%% merge/3 
 
 %% Elements from the first list are prioritized.
 fmerge2_1([H1 | T1], H2, Fun, T2, M) ->
@@ -2433,8 +2458,9 @@ rufmerge2_2(H1, T1, Fun, [H2 | T2], M, H2M) ->
     end;
 rufmerge2_2(H1, T1, Fun, [], M, H2M) ->
     case Fun(H2M, H1) of
-        true ->
+        true -> 
             lists:reverse(T1, [H1 | M]);
         false ->
             lists:reverse(T1, [H1, H2M | M])
     end.
+

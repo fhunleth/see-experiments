@@ -9,7 +9,7 @@ defmodule See do
   @spec main() :: any()
   def main do
     make_server(:io, fn -> start_io() end, &handle_io/2)
-    make_server(:code, const([:lists, :error_handler, :see | preloaded()]), &handle_code/2)
+    make_server(:code, const([:lists, :error_handler, See | preloaded()]), &handle_code/2)
     make_server(:error_logger, const(0), &handle_error_logger/2)
     make_server(:halt_demon, const([]), &handle_halt_demon/2)
     make_server(:env, fn -> start_env() end, &handle_env/2)
@@ -42,7 +42,7 @@ defmodule See do
   defp prim_load(module) do
     str = Atom.to_charlist(module)
 
-    case :erl_prim_loader.get_file(str ++ '.beam') do
+    case :erl_prim_loader.get_file(str ++ ~c".beam") do
       {:ok, bin, _full} ->
         case :erlang.load_module(module, bin) do
           {:module, ^module} -> {:ok, module}
@@ -111,7 +111,7 @@ defmodule See do
     env =
       case :init.get_argument(:environment) do
         {:ok, [l]} -> l
-        :error -> fatal({:missing, '-environment ...'})
+        :error -> fatal({:missing, ~c"-environment ..."})
       end
 
     Enum.map(env, &split_env/1)
@@ -146,7 +146,7 @@ defmodule See do
       {:cast, pid, q} ->
         case safe_call(fun, q, data) do
           {:EXIT, why} ->
-            exit(pid, why)
+            :erlang.exit(pid, why)
             server_loop(name, data, fun)
 
           {:ok, data1} ->
@@ -189,8 +189,8 @@ defmodule See do
   end
 
   def make_global(name, fun) do
-    case Process.whereis(name) do
-      nil ->
+    case :erlang.whereis(name) do
+      :undefined ->
         self_pid = self()
         pid = spawn(fn -> make_global(self_pid, name, fun) end)
 
@@ -203,21 +203,26 @@ defmodule See do
     end
   end
 
+
+
+
   defp make_global(pid, name, fun) do
     # Try to register this process under name
-    case Process.register(self(), name) do
-      _ ->
+    case :erlang.register(self(), name) do
+        {:"EXIT", _} -> send(pid, :ack)
+    _ ->
+
         send(pid, {self(), :ack})
         fun.()
-    rescue
-      _ -> send(pid, {self(), :ack})
     end
   end
 
+
+
   def on_exit(pid, fun) do
     spawn(fn ->
-      Process.flag(:trap_exit, true)
-      Process.link(pid)
+      :erlang.process_flag(:trap_exit, true)
+      :erlang.link(pid)
 
       receive do
         {:EXIT, ^pid, why} -> fun.(why)
@@ -225,10 +230,12 @@ defmodule See do
     end)
   end
 
+
+
   def every(pid, time, fun) do
     spawn(fn ->
-      Process.flag(:trap_exit, true)
-      Process.link(pid)
+      :erlang.process_flag(:trap_exit, true)
+      :erlang.link(pid)
       every_loop(pid, time, fun)
     end)
   end
@@ -246,7 +253,7 @@ defmodule See do
   def get_module_name do
     case :init.get_argument(:load) do
       {:ok, [[arg]]} -> module_name(arg)
-      :error -> fatal({:missing, '-load Mod'})
+      :error -> fatal({:missing, ~c"-load Mod"})
     end
   end
 
@@ -272,35 +279,37 @@ defmodule See do
     stop_system({:fatal, term})
   end
 
-  def preloaded do
+  def preloaded() do
     [:zlib, :prim_file, :prim_zip, :prim_inet, :erlang, :otp_ring0, :init, :erl_prim_loader]
   end
 
-  def make_scripts do
+  def make_scripts() do
     {:ok, cwd} = :file.get_cwd()
 
     script =
-      {:script, {"see", "1.0"},
+      {:script, {~c"see", ~c"1.0"},
        [
          {:preLoaded, preloaded()},
          {:progress, :preloaded},
          {:path, [cwd]},
-         {:primLoad, [:lists, :error_handler, :see]},
+         {:primLoad, [:lists, :error_handler, See]},
          :kernel_load_completed,
          {:progress, :kernel_load_completed},
          {:progress, :started},
          {:apply, {:see, :main, []}}
        ]}
 
-    IO.inspect(script, label: "Script")
-    :file.write_file('see.boot', :erlang.term_to_binary(script))
+           :io.format(~c"Script:~p~n",[script])
+
+
+    :file.write_file(~c"see.boot", :erlang.term_to_binary(script))
 
     :file.write_file(
-      'see',
-      '#!/bin/sh\nerl -boot ' ++ cwd ++ '/see -environment `printenv` -load $1\n'
+      ~c"see",
+      ~c"#!/bin/sh\nerl -boot #{cwd}/see -environment `printenv` -load $1\n"
     )
 
-    :os.cmd('chmod a+x see')
+    :os.cmd(~c"chmod a+x see")
     :init.stop()
     true
   end
