@@ -205,9 +205,9 @@ defmodule See do
 
   defp make_global(pid, name, fun) do
     # Try to register this process under name
-    case :erlang.register(self(), name) do
+    case :erlang.register(name, self()) do
       {:EXIT, _} ->
-        send(pid, :ack)
+        send(pid, {self(), :ack})
 
       _ ->
         send(pid, {self(), :ack})
