@@ -1,12 +1,15 @@
-BEAMS=see.beam hello.beam lists.beam error_handler.beam
+BEAMS=Elixir.Hello.beam Elixir.See.beam lists.beam error_handler.beam
 
 all: see.boot see $(BEAMS)
 
-%.beam: %.ex
+Elixir.Hello.beam: hello.ex
 	elixirc $<
-
-%.beam: %.erl
+Elixir.See.beam: see.ex
+	elixirc $<
+lists.beam: lists.erl
 	erlc $<
+error_handler.beam: error_handler.ex
+	elixirc $<
 
 see.boot see: Elixir.See.beam
 	erl -s Elixir.See make_scripts

@@ -1,7 +1,7 @@
 ERL=$(shell asdf which erl)
 
 all:
-	$(MAKE) -C elixir2 all
+	$(MAKE) -C elixir all
 	$(MAKE) -C erlang all
 	$(MAKE) -C c all
 
