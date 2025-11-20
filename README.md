@@ -9,12 +9,24 @@ it is about the smallest and fastest loading Erlang app possible.
 To try it out, install `erlang` and run:
 
 ```sh
+$ cd erlang
 $ make
 $ ./see hello
 Hello, World!
 ```
 
+Or try it in Elixir with:
+
+```sh
+$ cd elixir
+$ make
+$ ./see Elixir.Hello
+Hello, World!
+```
+
 ## Example benchmark run
+
+**These results are dated now. Rerun before making conclusions**
 
 Install [hyperfine](https://github.com/sharkdp/hyperfine) first and then:
 
