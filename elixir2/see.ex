@@ -73,7 +73,7 @@ defmodule See do
       _ -> :erlang.display({:stopping_system, why})
     end
 
-    Enum.each(funs, fn f -> f.() end)
+    :lists.map(fn f -> f.() end, funs)
     :erlang.halt()
     {:ok, []}
   end
@@ -114,13 +114,13 @@ defmodule See do
         :error -> fatal({:missing, ~c"-environment ..."})
       end
 
-    Enum.map(env, &split_env/1)
+    :lists.map(&split_env/1, env)
   end
 
   defp split_env(str), do: split_env(str, [])
 
-  defp split_env([?$ = _ | t], l), do: {Enum.reverse(l), t}
-  defp split_env([], l), do: {Enum.reverse(l), []}
+  defp split_env([?$ = _ | t], l), do: {:lists.reverse(l), t}
+  defp split_env([], l), do: {:lists.reverse(l), []}
   defp split_env([h | t], l), do: split_env(t, [h | l])
 
   def make_server(name, fun_d, fun_h) do
